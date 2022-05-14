@@ -140,10 +140,10 @@ file2
 ### Docker的底层技术
 
 虚拟机运行状态
-![虚拟机运行状态](module1/vm_run.png)
+![虚拟机运行状态](module1/imgs/vm_run.png)
 
 容器运行状态
-![容器运行状态](module1/container_run.png)
+![容器运行状态](module1/imgs/container_run.png)
 
 
 1. Namespace
