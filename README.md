@@ -79,8 +79,10 @@ CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
 # docker build -t registry/nginx:v1 -f ./Dockerfile . 
 
 # docker images
-REPOSITORY  TAG   IMAGEID  CREATED   SIZE
-registry/nginx  v1  c682fc3d4b9a  4 seconds ago  277MB
+REPOSITORY       TAG       IMAGE ID       CREATED         SIZE
+registry/nginx   v1        f9ad2d7f9c2b   3 minutes ago   166MB
+ubuntu/nginx     latest    f85d50b56ddd   4 months ago    139MB
+ubuntu           impish    2dc51e04d744   6 months ago    77.4MB
 ```
 
 3. 用自己做的nginx镜像启动一个容器
