@@ -1,8 +1,51 @@
 # simple-cloudnative
+- 预习：安装Docker
 - 模块一：Docker核心技术
 - 模块二：Kubernetes架构原理
 - 模块三：Kubernetes容器编排
 - 模块四：基于Kubernetes的CICD
+
+## 预习：课前准备
+1. 安装Ubuntu 20.04虚拟机
+- 安装VirtualBox
+- 安装vagrant
+
+```shell
+# VirtualBox下载安装，非常方便
+# https://www.virtualbox.org/wiki/Downloads
+# Vagrant下载安装，非常方便
+# https://www.vagrantup.com/downloads
+```
+
+- 启动使用Vagrantfile文件启动虚拟机
+
+```shell
+# cd module0/Vagrantfile
+# mkdir data
+# vagrant up
+```
+
+
+1. 安装Docker
+
+```shell
+# 在 ubuntu上安装 Docker运行时，参考：https∶//docs.docker.com/engine/install/ubuntu/
+# sudo apt-get update 
+# sudo apt-get install \
+apt-transport-https \
+ca-certificates \
+curl \
+gnupg-agent \
+software-properties-common
+# curl -fsSL https://download.docker.com/linux/ubuntu/gpg|sudo apt-key add -
+# sudo add-apt-repository \
+"deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) \
+stable"
+# sudo apt-get update
+# sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+```
 
 ## 模块一：Docker核心技术
 ### 目标
@@ -15,7 +58,9 @@
 
 ```shell
 # docker run -d ubuntu/nginx:latest
-# ubuntu/nginx 这个镜像的 latest 版本
+# ubuntu是镜像仓库的地址
+# nginx这个镜像的名字
+# latest镜像版本版本
 
 ```
 2. 自己来做一个 nginx 的镜像
@@ -42,7 +87,7 @@ registry/nginx  v1  c682fc3d4b9a  4 seconds ago  277MB
 
 # docker ps
 CONTAINER ID      IMAGE        COMMAND     CREATED       STATUS        PORTS               NAMES
-881b0539eae8        registry/nginx:v1   "/usr/sbin/nginx -g daemon off;"   2 seconds ago       Up 2 seconds                            loving_jackson
+881b0539eae8      registry/nginx:v1   "/usr/sbin/nginx -g daemon off;"   2 seconds ago       Up 2 seconds                            loving_jackson
 ```
 
 4. 测试一下容器是不是正常工作
@@ -94,6 +139,13 @@ file2
 
 ### Docker的底层技术
 
+虚拟机运行状态
+![虚拟机运行状态](module1/vm_run.png)
+
+容器运行状态
+![容器运行状态](module1/container_run.png)
+
+
 1. Namespace
 
 ```shell
@@ -113,13 +165,20 @@ root     20731 20684  0 18:59 ?        00:00:01 nginx: master process nginx -g d
 48       20788 20731  0 18:59 ?        00:00:06 nginx: worker process
 
 ```
+
 HOST  -> CONTAINER PID不一样，有对应关系
 ```text
 20731 -> 1
 20787 -> 7
 20788 -> 8
 ```
+
+除了PID namespace外还有：UTS USR Mount Network IPC 
+
 2. Cgroup
+
+
+
 3. Union FS
 
 ### Dockerfile最佳实践
