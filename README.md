@@ -23,10 +23,11 @@
 # cd module0/Vagrantfile
 # mkdir data
 # vagrant up
+# vagrant ssh
 ```
 
 
-1. 安装Docker
+2. 安装Docker
 
 ```shell
 # 在 ubuntu上安装 Docker运行时，参考：https∶//docs.docker.com/engine/install/ubuntu/
