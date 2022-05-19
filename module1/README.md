@@ -212,12 +212,12 @@ Namaspace解决进程之间的隔离，Cgroup用于解决进程资源的限制
 
 #### CPU subsystem
 ```text
-cpu.shares：在满载的情况下，配置CPU使用时间的相对值
-cpu.cfs_period_us：配置CPU时间周期长度，单位us
-cpu.cfs_quota_us：配置CPU最大使用时间，单位us
+cpu.shares：在满载的情况下，配置Cgroup下进程CPU使用时间的相对值
+cpu.cfs_period_us：配置Cgroup下进程CPU时间周期长度，单位us
+cpu.cfs_quota_us：配置Cgroup下进程CPU最大使用时间，单位us
 例如：
 1. CGroup A：cpu.cfs_quota_us=50000，cfs_period_us=100000，那么Cgroup A最大可以使用50000/100000=0.5个CPU，即最大CPU使用率是50%
-2. CGroup A：cpu.shares=2048，CGroup B：cpu.shares=1024，那么在主机满载情况下，Cgroup A最大可以使用2/3的CPU，Cgroup B最大可以使用1/3的CPU
+2. Cgroup A：cpu.shares=2048，Cgroup B：cpu.shares=1024，那么在主机满载情况下，Cgroup A最大可以使用2/3的CPU，Cgroup B最大可以使用1/3的CPU
 ```
 
 Cgroup CPU子系统练习：
@@ -225,6 +225,16 @@ Cgroup CPU子系统练习：
 ![](imgs/cgroup_exe.jpeg)
 
 #### Memory subsystem
+```text
+memory.usage_in_bytes：配置Cgroup下进程使用内存的值
+memory.max_usage_in_bytes：配置Cgroup下进程使用内存的最大值
+memory.limit_in_bytes：配置Cgroup下进程最多使用内存的值，-1不限制
+memory.oom_control：配置在Cgroup下是否使用OOM Killer，当Cgroup下进程内存使用超过最大值时，会触发OOM Kill
+```
+
+Cgroup Memory子系统练习：
+
+![](imgs/cgroup_memory.jpeg)
 
 #### Blockio subsystem
 
@@ -232,3 +242,5 @@ Cgroup CPU子系统练习：
 3. Union FS
 
 ### Dockerfile最佳实践
+
+
