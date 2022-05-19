@@ -210,6 +210,7 @@ Namaspace解决进程之间的隔离，Cgroup用于解决进程资源的限制
 
 内核会把Cgroup子系统挂载到/sys/fs/cgroup下
 
+
 #### CPU subsystem
 ```text
 cpu.shares：在满载的情况下，配置Cgroup下进程CPU使用时间的相对值
@@ -224,6 +225,7 @@ Cgroup CPU子系统练习：
 
 ![](imgs/cgroup_exe.jpeg)
 
+
 #### Memory subsystem
 ```text
 memory.usage_in_bytes：配置Cgroup下进程使用内存的值
@@ -236,7 +238,28 @@ Cgroup Memory子系统练习：
 
 ![](imgs/cgroup_memory.jpeg)
 
-#### Blockio subsystem
+
+#### Blkio subsystem
+```text
+blkio.throttle.read_iops_device：Cgroup下进程磁盘读取IOPS限制
+blkio.throttle.read_bps_device：Cgroup下进程磁盘读取吞吐量限制
+blkio.throttle.write_iops_device：Cgroup下进程磁盘写入IOPS限制
+blkio.throttle.write_bps_device：Cgroup下进程磁盘写入吞吐量限制
+```
+Blkio Cgroup参数配置:
+```shell
+echo "252:16 10485760" > $CGROUP_CONTAINER_PATH/blkio.throttle.write_bps_device
+# 256是主设备号，16是次设备号
+```
+
+Cgroup Blkio子系统练习：
+
+```shell
+# ls -l /dev/sda
+brw-rw---- 1 root disk 8, 0 May 19 02:41 /dev/sda
+
+
+```
 
 
 3. Union FS
