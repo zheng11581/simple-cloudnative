@@ -252,17 +252,7 @@ echo "252:16 10485760" > $CGROUP_CONTAINER_PATH/blkio.throttle.write_bps_device
 # 256是主设备号，16是次设备号
 ```
 
-Cgroup Blkio子系统练习：
-
-```shell
-# ls -l /dev/sda
-brw-rw---- 1 root disk 8, 0 May 19 02:41 /dev/sda
-
-
-```
-
-
-3. Union FS
+1. Union FS
 
 ### Dockerfile最佳实践
 
