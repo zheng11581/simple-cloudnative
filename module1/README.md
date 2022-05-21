@@ -252,7 +252,146 @@ echo "252:16 10485760" > $CGROUP_CONTAINER_PATH/blkio.throttle.write_bps_device
 # 256是主设备号，16是次设备号
 ```
 
-1. Union FS
+额外说明：
+
+Direct I/O 和 Buffered I/O
+
+![](imgs/page_cache.jpeg)
+
+在Linux里，由于考虑到性能问题，绝大多数的应用都会使用 Buffered I/O 模式
+
+3. Union FS
+
+想象一下，假设如果我们100个镜像，每个java镜像500M，如何存储和传输这些镜像最好？
+
+![](imgs/ideafs.jpeg)
+
+这就是Union FS，那Union FS是如何工作的呢？
+
+![](imgs/unionfs.jpeg)
+
+在容器内执行df-h可以看到是通过OverlayFS实现：
+
+![](imgs/overlayfs.jpeg)
+
+OverlayFS练习
+
+```shell
+
+mkdir upper lower merged work
+echo "I'm from lower!" > lower/in_lower.txt
+echo "I'm from upper!" > upper/in_upper.txt
+# `in_both` is in both directories
+echo "I'm from lower!" > lower/in_both.txt
+echo "I'm from upper!" > upper/in_both.txt
+
+sudo mount -t overlay overlay \
+ -o lowerdir=./lower,upperdir=./upper,workdir=./work \
+ ./merged
+
+
+```
+
+执行完目录结构为：
+
+```shell
+# tree -h
+.
+├── [4.0K]  lower
+│   ├── [  16]  in_both.txt
+│   └── [  16]  in_lower.txt
+├── [4.0K]  merged
+│   ├── [  16]  in_both.txt
+│   ├── [  16]  in_lower.txt
+│   └── [  16]  in_upper.txt
+├── [4.0K]  upper
+│   ├── [  16]  in_both.txt
+│   └── [  16]  in_upper.txt
+└── [4.0K]  work
+    └── [4.0K]  work
+
+# cat merged/in_both.txt
+I'm from upper!
+```
+- lower目录是底层的目录，只读的
+- upper目录是上层的目录，可读写的
+- merged目录是挂在后展示给用户的目录
+- work目录是挂载中间文件产生的目录
+
+模拟用户操作：
+
+第一，新建文件
+```shell
+# touch merged/newadd.txt
+# tree -h
+.
+├── [4.0K]  lower
+│   ├── [  16]  in_both.txt
+│   └── [  16]  in_lower.txt
+├── [4.0K]  merged
+│   ├── [  16]  in_both.txt
+│   ├── [  16]  in_lower.txt
+│   ├── [  16]  in_upper.txt
+│   └── [   0]  newadd.txt
+├── [4.0K]  upper
+│   ├── [  16]  in_both.txt
+│   ├── [  16]  in_upper.txt
+│   └── [   0]  newadd.txt
+└── [4.0K]  work
+    └── [4.0K]  work
+
+5 directories, 9 files
+```
+这个文件会出现在 upper/ 目录中
+
+第二，删除文件：
+
+删除 in_upper.txt 文件
+
+```shell
+# rm -rf merged/in_upper.txt
+# ll upper/
+total 12
+drwxr-xr-x 2 root root 4096 May 21 18:32 ./
+drwxr-xr-x 6 root root 4096 May 21 18:14 ../
+-rw-r--r-- 1 root root   16 May 21 18:13 in_both.txt
+-rw-r--r-- 1 root root    0 May 21 18:26 newadd.txt
+```
+这个文件会在 upper/ 目录中消失
+
+删除 in_lower.txt 文件
+
+```shell
+# rm -rf merged/in_lower.txt
+# ll ../lower/
+total 16
+drwxr-xr-x 2 root root 4096 May 21 18:13 ./
+drwxr-xr-x 6 root root 4096 May 21 18:14 ../
+-rw-r--r-- 1 root root   16 May 21 18:13 in_both.txt
+-rw-r--r-- 1 root root   16 May 21 18:13 in_lower.txt
+```
+在 lower/ 目录里的"in_lower.txt"文件不会有变化
+
+第三，修改文件
+
+修改 in_upper.txt 文件
+
+```shell
+# vim merged/in_upper.txt
+# cat upper/in_upper.txt
+I'm from upper! And edited!
+```
+
+修改 in_lower.txt 文件
+
+```shell
+# vim merged/in_lower.txt
+# cat lower/in_lower.txt
+I'm from lower!
+# cat upper/in_lower.txt
+I'm from lower! And edited!
+```
+会在 upper/ 目录中新建一个"in_lower.txt"文件，包含更新的内容，而在 lower/ 中的原来的实际文件"in_lower.txt"不会改变
 
 ### Dockerfile最佳实践
 
