@@ -92,12 +92,12 @@ file2
 5. 容器的优点
 
 虚拟机运行状态
-![虚拟机运行状态](module1/imgs/vm_run.png)
+![虚拟机运行状态](imgs/vm_run.png)
 
 容器运行状态
-![容器运行状态](module1/imgs/container_run.png)
+![容器运行状态](imgs/container_run.png)
 
-![容器主要特征](module1/imgs/docker.jpeg)
+![容器主要特征](imgs/docker.jpeg)
 
 
 ### Docker的底层技术
@@ -395,4 +395,15 @@ I'm from lower! And edited!
 
 ### Dockerfile最佳实践
 
+1. 创建Docker镜像
 
+第一步，首先创建dockerfile
+
+```shell
+FROM ubuntu:impish
+RUN apt update && apt-get install -y nginx
+COPY file1 /var/www/html/
+ADD  file2.tar.gz /var/www/html/
+EXPOSE 80
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
+```
