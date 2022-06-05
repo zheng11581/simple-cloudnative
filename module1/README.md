@@ -1,10 +1,10 @@
 ## 模块一：Docker核心技术
-### 目标
+## 目标
 1. 理解什么是Docker容器
 2. Docker的底层技术
 3. 将我们的业务容器化，过程需要注意什么
 
-### 什么是Docker容器？
+## 什么是Docker容器？
 1. 启动一个nginx服务容器看看
 
 ```shell
@@ -155,7 +155,7 @@ HOST PID Namespace  -> CONTAINER PID Namespace不一样，有对应关系
 
 对Namespace的操作
 
-#### 查看当前操作系统的Namspace
+### 查看当前操作系统的Namspace
 
 ```shell
 # lsns -t net
@@ -165,7 +165,7 @@ HOST PID Namespace  -> CONTAINER PID Namespace不一样，有对应关系
 4026532257 net       3 253893 root          0 /run/docker/netns/fbcce4656316 nginx: master process /usr/sbin/nginx -g daemon off;
 ```
 
-#### 查看某进程的Namespace
+### 查看某进程的Namespace
 
 ```shell
 # ls -la /proc/253893/ns/
@@ -182,7 +182,7 @@ lrwxrwxrwx 1 root root 0 May 14 09:17 user -> 'user:[4026531837]'
 lrwxrwxrwx 1 root root 0 May 14 08:07 uts -> 'uts:[4026532253]'
 ```
 
-#### 进入某Namespace执行命令
+### 进入某Namespace执行命令
 
 ```shell
 # nsenter -t 253893 -n ip add
@@ -196,7 +196,7 @@ lrwxrwxrwx 1 root root 0 May 14 08:07 uts -> 'uts:[4026532253]'
        valid_lft forever preferred_lft forever
 ```
 
-#### Namespace练习
+### Namespace练习
 
 ![](imgs/namespace_exe.jpeg)
 
@@ -211,7 +211,7 @@ Namaspace解决进程之间的隔离，Cgroup用于解决进程资源的限制
 内核会把Cgroup子系统挂载到/sys/fs/cgroup下
 
 
-#### CPU subsystem
+### CPU subsystem
 ```text
 cpu.shares：在满载的情况下，配置Cgroup下进程CPU使用时间的相对值
 cpu.cfs_period_us：配置Cgroup下进程CPU时间周期长度，单位us
@@ -226,7 +226,7 @@ Cgroup CPU子系统练习：
 ![](imgs/cgroup_exe.jpeg)
 
 
-#### Memory subsystem
+### Memory subsystem
 ```text
 memory.usage_in_bytes：配置Cgroup下进程使用内存的值
 memory.max_usage_in_bytes：配置Cgroup下进程使用内存的最大值
@@ -239,7 +239,7 @@ Cgroup Memory子系统练习：
 ![](imgs/cgroup_memory.jpeg)
 
 
-#### Blkio subsystem
+### Blkio subsystem
 ```text
 blkio.throttle.read_iops_device：Cgroup下进程磁盘读取IOPS限制
 blkio.throttle.read_bps_device：Cgroup下进程磁盘读取吞吐量限制
@@ -393,9 +393,22 @@ I'm from lower! And edited!
 ```
 会在 upper/ 目录中新建一个"in_lower.txt"文件，包含更新的内容，而在 lower/ 中的原来的实际文件"in_lower.txt"不会改变
 
-### Dockerfile最佳实践
+## Dockerfile最佳实践
 
-1. 创建Docker镜像
+1. 什么样的应用【最】适合构建成镜像
+
+- 应用程序以一个或多个进程持续在运行
+- 应用进程需是无状态的
+  - 可横向扩展的，多个实例角色是等价的，配置是一样的
+  - 可宰杀的，多个实例中生病的实例可以被kill
+- 应用程序运行过程中产生的需要持久化数据要存储在后端服务内，例如数据库
+- Session中数据要存储在后端缓存服务内，例如：Redis、Memcached
+
+思考一下这是什么样的应用?
+
+### ---
+
+2. 创建Docker镜像
 
 第一步，首先创建dockerfile
 
@@ -407,3 +420,203 @@ ADD  file2.tar.gz /var/www/html/
 EXPOSE 80
 CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
 ```
+- FROM：指定容器运行时的基础环境，如：centos:7.9.2009
+- ENV：指定容器内的环境变量，如：JAVA_HOME=xxxx
+- EXPOSE: 指定容器运行时暴露的端口
+- COPY && ADD：向容器内添加文件，注意区别
+- RUN：在应用进程启动前需要执行的命令，例如安装工具
+- ENTRYPOINT & CMD：启动进程的命令
+  - 需要进程在前台运行
+  - ENTRYPOINT是要执行的应用程序，如：/usr/bin/nginx
+  - CMD是应用程序的参数，如：-g daemon off
+  - 也可以都写在一起，不推荐
+
+第二步， 构建镜像：docker build
+
+### Build Context
+
+运行docker build时，当前目录被称为构建上下文
+
+- 构建上下文中的文件会被传输给docker deamon
+- 构建上下文中没用的文件会造成传输时间长、构建需要资源多
+
+```shell
+# ll /root/go/src/github.com/zheng11581/simple-cloudnative/module1/nginx/Dockerfile
+# cd /usr
+# ls -l
+total 100
+drwxr-xr-x   2 root root 36864 May 21 18:16 bin
+drwxr-xr-x   2 root root  4096 Dec 29 22:20 config
+drwxr-xr-x   2 root root  4096 Apr 15  2020 games
+drwxr-xr-x   7 root root  4096 Jan 27 12:10 include
+drwxr-xr-x  91 root root  4096 Jan 27 17:05 lib
+drwxr-xr-x   2 root root  4096 Jul 31  2020 lib32
+drwxr-xr-x   2 root root  4096 Dec 29 22:15 lib64
+drwxr-xr-x   4 root root  4096 May 14 02:58 libexec
+drwxr-xr-x   2 root root  4096 Jul 31  2020 libx32
+drwxr-xr-x  10 root root  4096 Dec 29 22:07 local
+drwxr-xr-x   2 root root 20480 May 14 02:58 sbin
+drwxr-xr-x 122 root root  4096 May 14 02:44 share
+drwxr-xr-x   6 root root  4096 Dec 29 22:20 src
+
+# docker build -f /root/go/src/github.com/zheng11581/simple-cloudnative/module1/nginx/Dockerfile -t nginx:bigctx .
+Sending build context to Docker daemon 1.258GB
+^Control C
+
+# docker build -t nginx:smallctx /root/go/src/github.com/zheng11581/simple-cloudnative/module1/nginx/
+Sending build context to Docker daemon  3.584kB
+Step 1/6 : FROM ubuntu:impish
+ ---> 2dc51e04d744
+Step 2/6 : RUN apt update && apt-get install -y nginx
+ ---> Using cache
+ ---> 3013adfbf428
+Step 3/6 : COPY file1 /var/www/html/
+ ---> Using cache
+ ---> de4df850b665
+Step 4/6 : ADD file2.tar.gz /var/www/html/
+ ---> Using cache
+ ---> bddcc5fd147e
+Step 5/6 : EXPOSE 80
+ ---> Using cache
+ ---> 5e23d73fc62a
+Step 6/6 : CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
+ ---> Using cache
+ ---> e667596cdbd0
+Successfully built e667596cdbd0
+Successfully tagged nginx:smallctx
+```
+
+### Build cache
+
+docker build 会依次执行Dockerfile里的命令
+
+FROM|RUN：每条指令会单独一个镜像层，简单的比较命令行字符串，字符串一致则Using cache
+COPY|ADD：每条指令会单独一个镜像层，比较镜像层内文件checksum，一致则Using cache（checksum比较文件内容）
+其他命令：不生成镜像层
+
+通过Overlay FS，将【最新命令】的镜像层叠加为UpperDir，之前的命令设置为LowerDir
+
+```shell
+# docker inspect nginx:smallctx
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/330ce617714bf507e2e00b3921604e914b28c7a530cba223e3725b682bcae273/diff:/var/lib/docker/overlay2/ad73d1fb7c90b470e967201562470b93f5f35c34efe3ff48677b0810450df958/diff:/var/lib/docker/overlay2/e25c9ddb12f1d87cd663d7f5166357c229d61111871c4f8a041dd772159a95fa/diff",
+                "MergedDir": "/var/lib/docker/overlay2/ce72661d6ab0d918b1cc0983ff705cf2b54b914b78bdbc8355ad8f49e7a1dd81/merged",
+                "UpperDir": "/var/lib/docker/overlay2/ce72661d6ab0d918b1cc0983ff705cf2b54b914b78bdbc8355ad8f49e7a1dd81/diff",
+                "WorkDir": "/var/lib/docker/overlay2/ce72661d6ab0d918b1cc0983ff705cf2b54b914b78bdbc8355ad8f49e7a1dd81/work"
+            },
+```
+
+看到LowerDir有3个镜像层，有4个FROM|RUN|ADD|COPY命令，这是因为file1和file2都是空文件，所以它们内容相同，只需要一个镜像层
+
+
+### Multi-Stage Build
+
+- docker多阶段构建：在同一个Dockerfile中先定义打包二进制文件，再将打包好的二进制文件添加到镜像中
+
+比如Maven项目：
+Stage1: copy code to working dir --> mvn package --> got target/app.jar
+Stage2: copy jar file from stage1 --> entrypoint is java -jar /app.jar
+
+比如NPM项目：
+Stage1: copy code to working dir --> npm build --> got dist dir
+Stage2: copy dist dir from stage1 --> entrypoint is nginx -g daemon off;
+
+比如C#项目：
+Stage1: copy code to working dir --> dotnet publish --> got app.dll
+Stage2: copy dll from stage1 --> entrypoint is dotnet app.dll
+
+```shell
+
+# syntax = docker/dockerfile:experimental
+FROM maven:3.8.5-openjdk-8-slim as maven
+WORKDIR /discovery-service
+COPY . .
+RUN --mount=type=cache,target=/root/.m2,rw mvn -B package
+
+FROM azul/zulu-openjdk-alpine
+COPY --from=maven /discovery-service/target/discovery-service.jar discovery-service.jar
+ENTRYPOINT ["java", "-jar", "/discovery-service.jar"]
+EXPOSE 8761
+
+```
+
+- cicd多步骤构建
+
+后面详细介绍
+
+
+## 容器镜像仓库（Harbor）
+
+1. 将CA证书ca.crt导入到本地虚拟机的Docker中，重启docker
+
+```shell
+# mkdir -p /etc/docker/certs.d/goharbor.com
+# cp /vagrant_data/ca.crt /etc/docker/certs.d/goharbor.com
+# systemcrl restart docker
+```
+
+2. 配置DNS解析
+
+由于我们是本地虚拟机，而且虚拟机DNS已经指向自己电脑，只需要配置自己电脑的hosts
+
+```shell
+# vim /etc/hosts
+
+192.168.110.72 goharbor.com
+
+# ping goharbor.com
+PING goharbor.com (192.168.110.72): 56 data bytes
+64 bytes from 192.168.110.72: icmp_seq=0 ttl=62 time=10.752 ms
+64 bytes from 192.168.110.72: icmp_seq=1 ttl=62 time=19.315 ms
+64 bytes from 192.168.110.72: icmp_seq=2 ttl=62 time=10.964 ms
+```
+
+在虚拟机中ping goharbor.com
+
+```shell
+# ping goharbor.com
+PING goharbor.com (192.168.110.72) 56(84) bytes of data.
+64 bytes from goharbor.com (192.168.110.72): icmp_seq=1 ttl=63 time=12.4 ms
+64 bytes from goharbor.com (192.168.110.72): icmp_seq=2 ttl=63 time=15.4 ms
+```
+
+3. Docker login 
+
+```shell
+# docker login goharbor.com
+Username: admin
+Password:
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+
+```
+[509: certificate signed by unknown authority](https://gitee.com/zheng11581/cloudnative/blob/main/kubernetes/demo/Harbor/installation/self-signed-ca.MD)
+
+4. 推送镜像到镜像仓库
+
+```shell
+# docker tag discovery-service:latest goharbor.com/demo/discovery-service:latest
+
+# docker push goharbor.com/demo/discovery-service:latest
+```
+
+## Dockerfile最佳实践
+
+## 作业
+
+1. 查一下docker command： 
+   1. 已经推出但为被关闭的容器
+   2. 进入正在运行的容器
+   3. 查看容进程在操作系统的Pid
+
+2. 将自己负责的业务应用容器化
+   1. 考虑镜像大小
+   2. 使用多阶段构建
+   3. 将Dockerfile和业务应用代码存放在一起
+
+3. 将自己负责人业务容器镜像推送到，Hatbor镜像仓库（必做）
+
+
