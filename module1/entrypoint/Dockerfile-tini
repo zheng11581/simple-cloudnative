@@ -1,9 +1,9 @@
 FROM azul/zulu-openjdk-alpine
 # Add Tini
 ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-muslc-amd64 /tini
 RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
 COPY target/discovery-service.jar discovery-service.jar
+ENTRYPOINT ["/tini", "--"]
 CMD ["java", "-jar", "/discovery-service.jar"]
 EXPOSE 8761

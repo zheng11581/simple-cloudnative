@@ -611,13 +611,97 @@ Login Succeeded
 ### 镜像
 变动少的镜像层放到底层，也就是Dockerfile的上面，因为底层的镜像层变动会导致后面镜像层的失效
 
-### 镜像的启动命令要选择好
+### 镜像的启动命令要选择好，可以进程可以处理signal
+
+看一个例子，一个应用分别使用3种init进程方法：shell、java、tini启动，看看是否可以正确处理信号量
 
 [shell as init](./entrypoint/Dockerfile-shell)
 
 [java as init](./entrypoint/Dockerfile-shell)
 
 [tiny as init](./entrypoint/Dockerfile-tiny)
+
+1. init进程：shell
+```shell
+# docker run --name app-shell -d goharbor.com/demo/discovery-service:shell 
+# docker exec -it app-shell sh
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh /run.sh
+    7 root      0:34 java -jar /discovery-service.jar
+   48 root      0:00 sh
+   55 root      0:00 ps -ef
+
+/ # kill -9 1
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh /run.sh
+    7 root      0:35 java -jar /discovery-service.jar
+   48 root      0:00 sh
+   56 root      0:00 ps -ef
+
+/ # kill 1
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh /run.sh
+    7 root      0:35 java -jar /discovery-service.jar
+   48 root      0:00 sh
+   56 root      0:00 ps -ef
+```
+kill -9无法信号量无法被正确处理，kill信号无法被正确被处理
+
+
+
+2. init进程：java
+
+```shell
+# docker run --name app-java -d goharbor.com/demo/discovery-service:java
+# docker exec -it app-java sh
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:44 java -jar /discovery-service.jar
+   47 root      0:00 sh
+   54 root      0:00 ps -ef
+
+/ # kill -9 1
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:44 java -jar /discovery-service.jar
+   47 root      0:00 sh
+   54 root      0:00 ps -ef
+
+/ # kill 1
+/ # %  
+
+```
+kill -9无法信号量无法被正确处理，kill信号可以正确被处理
+
+3. init进程：tini
+
+```shell
+# docker run --name app-tini -d goharbor.com/demo/discovery-service:tini
+# docker exec -it app-tini sh
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 /tini -- java -jar /discovery-service.jar
+    7 root      0:23 java -jar /discovery-service.jar
+   23 root      0:00 sh
+   29 root      0:00 ps -ef
+
+/ # kill -9 1
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 /tini -- java -jar /discovery-service.jar
+    7 root      0:23 java -jar /discovery-service.jar
+   23 root      0:00 sh
+   29 root      0:00 ps -ef
+
+/ # kill 1
+/ # % 
+```
+kill -9无法信号量无法被正确处理，kill信号可以正确被处理
+
+### 结论，如果可以确认业务容器的init进程可以处理SIGTERM信号（15），那么可以使用业务进程作为init进程；如果无法确认使用tini作为init进程，就像上面例子的一样
 
 ## 作业
 
@@ -630,6 +714,7 @@ Login Succeeded
    1. 考虑镜像大小
    2. 使用多阶段构建
    3. 将Dockerfile和业务应用代码存放在一起
+   4. 业务容器init进程需要能够处理SIGTERM信号（kill）
 
 3. 将自己负责人业务容器镜像推送到，Hatbor镜像仓库（必做）
 
