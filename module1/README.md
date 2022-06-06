@@ -494,7 +494,7 @@ FROM|RUN：每条指令会单独一个镜像层，简单的比较命令行字符
 COPY|ADD：每条指令会单独一个镜像层，比较镜像层内文件checksum，一致则Using cache（checksum比较文件内容）
 其他命令：不生成镜像层
 
-通过Overlay FS，将【最新命令】的镜像层叠加为UpperDir，之前的命令设置为LowerDir
+通过Overlay FS，将【最新命令】的镜像层叠加为UpperDir，之前的命令设置为LowerDir，底层的镜像层变动会导致后面的镜像层缓存失效
 
 ```shell
 # docker inspect nginx:smallctx
@@ -604,6 +604,20 @@ Login Succeeded
 ```
 
 ## Dockerfile最佳实践
+
+### 基础镜像
+基础镜像按照需要选择比较小的，但不是越小越好，需要经过测试看是否满足要求
+
+### 镜像
+变动少的镜像层放到底层，也就是Dockerfile的上面，因为底层的镜像层变动会导致后面镜像层的失效
+
+### 镜像的启动命令要选择好
+
+[shell as init](./entrypoint/Dockerfile-shell)
+
+[java as init](./entrypoint/Dockerfile-shell)
+
+[tiny as init](./entrypoint/Dockerfile-tiny)
 
 ## 作业
 
