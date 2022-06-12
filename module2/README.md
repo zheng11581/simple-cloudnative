@@ -16,7 +16,8 @@ Kubernetes是谷歌开源的容器集群管理系统，是Google多年大规模�
 ### Kubernetes基本组件
 
 Kubernetes分布式架构
-![Kubernetes分布式架构](imgs/kubernetes.jpeg)
+
+![Kubernetes架构](imgs/kubernetes.jpeg)
 
 分布式组件的功能
 ![Kubernetes组件](./imgs/kubernetes-detail.jpeg)
