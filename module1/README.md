@@ -395,6 +395,9 @@ I'm from lower! And edited!
 
 ## Dockerfile最佳实践
 
+
+![](./imgs/docker-deamon.jpeg)
+
 1. 什么样的应用【最】适合构建成镜像
 
 - 应用程序以一个或多个进程持续在运行

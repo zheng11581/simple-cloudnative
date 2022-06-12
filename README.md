@@ -11,6 +11,6 @@
 ## 分享计划
 - [预习：安装Docker](./module0/README.md)
 - [模块一：Docker核心技术](./module1/README.md)
-- [模块二：Kubernetes架构原理](./module2/README.md)
+- [模块二：Kubernetes架构原则和对象设计原则](./module2/README.md)
 - 模块三：Kubernetes容器编排
 - 模块四：基于Kubernetes的CICD
