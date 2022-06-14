@@ -98,12 +98,21 @@ x
   - Log Relication
 
 - 安全性
+  - 选举安全性：每个Term只能选举出一个Leader
+  - Leader完整性：只有Term较大，Index较大的Cadidate可以当选
 
 - 失效处理
+  - Leader失效：恢复后会成为Follower，并被新的Leader数据覆盖
+  - Follower不可用：恢复后继续作为Follower，同步Leader数据
+  - 多个Candidate：随机一个Leader Election timeout（150~300ms），重新发起投票
 
 - wal日志
 
+![](imgs/wal_and_mvcc.jpeg)
+
 - Watch机制
+
+
 
 ### Kubernetes的架构原则
 
