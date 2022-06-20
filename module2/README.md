@@ -1,4 +1,4 @@
-## 模块二：Kubernetes架构原则和对象设计原则
+## 模块二：Kubernetes基础架构和对象
 
 ### 什么是Kubernetes?
 
@@ -13,7 +13,7 @@ Kubernetes是谷歌开源的容器集群管理系统，是Google多年大规模�
 - 无状态服务和有状态服务；
 - 插件机制保证扩展性。
 
-### Kubernetes基本组件
+### Kubernetes基础架构
 
 Kubernetes分布式架构
 ![Kubernetes架构](imgs/kubernetes.jpeg)
@@ -85,11 +85,7 @@ x
 
 - 服务注册与发现
 
-![](imgs/etcd-服务注册与发现.jpeg)
-
 - 基于监听机制的分布式系统
-
-![](imgs/etcd-消息发布与订阅.jpeg)
 
 重要原理
 
@@ -117,6 +113,34 @@ x
 
 ### Kubernetes的架构原则
 
+![](./imgs/k8s_design_rules.png)
+
+![](./imgs/k8s_layers.png)
+
+- 核心层：Kubernetes最核心的功能。对外提供API构建高层应用；对内提供插件式应用的执行环境
+- 应用层：提供部署（无状态应用、有状态应用、批处理任务、集群应用等）和路由（服务发现、DNS解析等）的能力
+- 管理层：提供自动化（动态扩展）、策略管理（RBAC、Quota、PSP、NetworkPolicy）能力
+- 接口层：Kubectl命令行工具、客户端SDK、集群联邦
+- 生态系统：分为两个范畴
+  - Kubernetes外部：日志、监控、ServiceMesh、配置管理、CICD等
+  - Kubernetes内部：CRI、CNI、CSI、镜像仓库、Cloud Provider、集群自身的配置和管理
+
 ### Kubernetes的对象设计原则
+
+- 所有API对象都是声明式的
+
+![声明式](./imgs/declare.jpg)
+
+
+- API对象是彼此互补而且可组合的
+
+
+- 高层API是以操作意图为基础设计
+
+
+- 底层API根据高层API的控制需要设计
+
+
+- 不要有在外部API无法显式知道的内部隐藏机制
 
 ### Kubernetes核心对象
