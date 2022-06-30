@@ -133,14 +133,102 @@ x
 
 
 - API对象是彼此互补而且可组合的
-
+高内聚，松耦合
 
 - 高层API是以操作意图为基础设计
-
+Kubernetes的高层API设计，一定是以Kubernetes的业务为基础出发，也就是以系统调度管理容器的操作意图为基础设计
 
 - 底层API根据高层API的控制需要设计
+设计实现低层API的目的，是为了被高层API使用，考虑减少冗余、提高重用性的目的，低层API的设计也要以需求为基础
 
-
-- 不要有在外部API无法显式知道的内部隐藏机制
+- 底层API不要有在高层API无法显式知道的内部隐藏机制
+例如StatefulSet和ReplicaSet，本来就是两种Pod集合，那么Kubernetes就用不同API对象来定义它们，而不会说只用同一个ReplicaSet，内部通过特殊的算法再来区分这个ReplicaSet是有状态的还是无状态
 
 ### Kubernetes核心对象
+
+- Pod API
+
+#### 为什么需要Pod：成组调度
+
+二进制部署: 进程 -> 虚拟机 -> CentOS/Ubuntu -> 宿主机
+容器化部署：容器 -> Pod    ->  Kubernetes   -> 宿主机
+
+```shell
+# pstree -g
+
+systemd(1)-+-accounts-daemon(1984)-+-{gdbus}(1984)
+           | `-{gmain}(1984)
+           |-acpid(2044)
+          ...      
+           |-lxcfs(1936)-+-{lxcfs}(1936)
+           | `-{lxcfs}(1936)
+           |-mdadm(2135)
+           |-ntpd(2358)
+           |-polkitd(2128)-+-{gdbus}(2128)
+           | `-{gmain}(2128)
+           |-rsyslogd(1632)-+-{in:imklog}(1632)
+           |  |-{in:imuxsock) S 1(1632)
+           | `-{rs:main Q:Reg}(1632)
+           |-snapd(1942)-+-{snapd}(1942)
+           |  |-{snapd}(1942)
+           |  |-{snapd}(1942)
+           |  |-{snapd}(1942)
+           |  |-{snapd}(1942)
+```
+Linux 系统里的进程不是孤苦伶仃的，是以进程组的方式进行组合，例如：rsyslogd它负责的是 Linux 操作系统里的日志处理。可以看到，rsyslogd 的主程序 main，和它要用到的内核日志模块 imklog 等，同属于 1632 进程组。这些进程相互协作，共同完成 rsyslogd 程序的职责。
+
+Kubernetes就是把这种进程组的概念映射到容器技术中形成Pod的概念（容器组）统一调度，用来解决成组调度的问题
+
+#### Pod的实现
+Pod是一组共享了某些资源的容器，Pod里的所有容器，共享的是同一个 Network Namespace，并且可以声明共享同一个 Volume，它只是一个逻辑概念
+
+![](./imgs/infra-container.png)
+
+Infra 容器一定要占用极少的资源，所以它使用的是一个非常特殊的镜像，叫作：k8s.gcr.io/pause。这个镜像是一个用汇编语言编写的、永远处于“暂停”状态的容器，不会退出，解压后的大小也只有 100~200 KB 左右
+
+#### 为什么需要Pod：容器设计模式
+
+```shell 
+# cat yamls/two-container-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: two-containers
+spec:
+  restartPolicy: Never
+  volumes:
+  - name: shared-data
+    hostPath:      
+      path: /mydata
+  containers:
+  - name: nginx-container
+    image: nginx
+    volumeMounts:
+    - name: shared-data
+      mountPath: /usr/share/nginx/html
+  - name: debian-container
+    image: debian
+    volumeMounts:
+    - name: shared-data
+      mountPath: /pod-data
+    command: ["/bin/sh"]
+    args: ["-c", "echo Hello from the debian container > /pod-data/index.html"]
+```
+
+
+
+- 它们可以直接使用 localhost 进行通信；
+- 它们看到的网络设备跟 Infra 容器看到的完全一样；
+- 一个 Pod 只有一个 IP 地址，也就是这个 Pod 的 Network Namespace 对应的 IP 地址；
+- 当然，其他的所有网络资源，都是一个 Pod 一份，并且被该 Pod 中的所有容器共享；
+- Pod 的生命周期只跟 Infra 容器一致，而与容器 A 和 B 无关。
+
+
+
+- Controller API
+  - ReplicaSet 
+  - Deployment
+  - StatefulSet
+  - DaemonSet
+  - Job
+  - CronJob
