@@ -212,7 +212,8 @@ spec:
     - name: shared-data
       mountPath: /pod-data
     command: ["/bin/sh"]
-    args: ["-c", "echo Hello from the debian container > /pod-data/index.html"]
+    args: ["-c", "echo Hello from the debian container > /pod-data/index.html && sleep 600"]
+# kubeclt apply -f yamls/two-container-pod.yaml
 ```
 
 
