@@ -19,6 +19,5 @@ spec:
       volumeMounts:
         - name: shared-data
           mountPath: /pod-data
-      command: ["/bin/sh"]
-      args:
-        ["-c", "echo Hello from the debian container > /pod-data/index.html"]
+      # command: ["/bin/sh"]
+      args: ["echo Hello from the debian container > /pod-data/index.html"]
