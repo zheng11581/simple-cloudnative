@@ -14,13 +14,11 @@ spec:
       volumeMounts:
         - name: shared-data
           mountPath: /usr/share/nginx/html
-    - name: busybox-container
-      image: busybox
+    - name: debian-container
+      image: debian
       volumeMounts:
         - name: shared-data
           mountPath: /pod-data
-      # command: ["/bin/sh"]
-      command:
-        [
-          "echo Hello from the debian container > /pod-data/index.html && sleep 600",
-        ]
+      command: ["/bin/sh"]
+      args:
+        ["-c", "echo Hello from the debian container > /pod-data/index.html"]
