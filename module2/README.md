@@ -206,8 +206,8 @@ spec:
     volumeMounts:
     - name: shared-data
       mountPath: /usr/share/nginx/html
-  - name: debian-container
-    image: debian
+  - name: busybox-container
+    image: busybox
     volumeMounts:
     - name: shared-data
       mountPath: /pod-data
