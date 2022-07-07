@@ -202,7 +202,7 @@ spec:
       path: /mydata
   containers:
   - name: nginx-container
-    image: nginx:1.23-debian-11
+    image: bitnami/nginx:1.23-debian-11
     volumeMounts:
     - name: shared-data
       mountPath: /usr/share/nginx/html
