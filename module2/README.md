@@ -249,7 +249,19 @@ A B两个容器进程实际上是有“超亲密关系”的，他们需要通�
 
 ```shell
 # kubectl apply -f yamls/namespace/nginx-foo.yaml
+# kubectl get pod -n foo -owide
+NAME         READY   STATUS    RESTARTS   AGE   IP               NODE         NOMINATED NODE   READINESS GATES
+nginx-demo   2/2     Running   0          10s   192.168.176.54   cn-master1   <none>           <none>
+# curl 192.168.176.54
+foo
+
 # kubectl apply -f yamls/namespace/nginx-bar.yaml
+# kubectl get pod -n bar -owide
+NAME         READY   STATUS    RESTARTS   AGE   IP               NODE         NOMINATED NODE   READINESS GATES
+nginx-demo   2/2     Running   0          12s   192.168.176.55   cn-master1   <none>           <none>
+
+# curl 192.168.176.55
+bar
 ```
 
 - Spec：各种规格属性，定义各个对象的主要区别在这里
