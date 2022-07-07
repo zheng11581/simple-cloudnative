@@ -218,6 +218,7 @@ spec:
     - echo Hello from the centos container > /pod-data/index.html; sleep 3600
 # kubeclt apply -f yamls/two-container-pod.yaml
 ```
+A B两个容器进程实际上是有“超亲密关系”的，他们需要通过文件系统进行通信，还有以下“超亲密关系”：
 
 - 它们可以直接使用 localhost 进行通信；
 - 它们看到的网络设备跟 Infra 容器看到的完全一样；
@@ -226,11 +227,61 @@ spec:
 - Pod 的生命周期只跟 Infra 容器一致，而与容器 A 和 B 无关。
 
 ```shell
-# kubectl exec -it two-containers -c centos-container -- ip add
-
+# kubectl exec -it two-containers -c centos-container -- hostname -i
+# kubectl exec -it two-containers -c nginx-container -- hostname -i
 ```
 
+#### Pod API对象的分解
 
+首先先看一下所有API对象共性的东西：pkg/apis/core/types.go
+
+- TypeMeta
+  - Group
+  - Kind
+  - Version
+
+- ObjectMeta
+  - Name
+  - Namespace：隔离API对象、做资源隔离
+  - Labels：给对象打标签，可以做filter/selector
+  - Annotations
+  - ...
+
+```shell
+# kubectl apply -f yamls/namespace/nginx-foo.yaml
+# kubectl apply -f yamls/namespace/nginx-bar.yaml
+```
+
+- Spec：各种规格属性，定义各个对象的主要区别在这里
+
+- Status：对象的运行状态（需不要自己管理）
+
+PodSpec详解
+
+- 容器组属性
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: centos-sleep
+spec:
+  restartPolicy: Never
+  volumes:
+  - name: shared-data
+    hostPath:      
+      path: /mydata
+  - name: centos-container # 容器名字
+    image: centos:7.9.2009 # 容器使用的镜像和版本
+    volumeMounts: # 容器挂载卷
+    - name: shared-data # 卷的名字
+      mountPath: /pod-data # 挂载容器内的目录
+    command: # 容器执行的命令
+    - /bin/sh
+    args: # 容器执行命令的参数列表
+    - -c
+    - sleep 3600
+```
 
 
 

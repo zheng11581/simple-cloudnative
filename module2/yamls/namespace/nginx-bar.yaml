@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bar
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-demo
+  namespace: bar
+spec:
+  restartPolicy: Never
+  volumes:
+    - name: shared-data
+      hostPath:
+        path: /data
+    - name: pod-info
+      downwardAPI:
+        items:
+          - path: "namespace"
+            fieldRef:
+              fieldPath: metadata.namespace
+  containers:
+    - name: nginx-container
+      image: bitnami/nginx:1.16-centos-7
+      volumeMounts:
+        - name: shared-data
+          mountPath: /usr/share/nginx/html
+    - name: centos-container
+      image: centos:7.9.2009
+      volumeMounts:
+        - name: shared-data
+          mountPath: /pod-data
+        - name: pod-info
+          mountPath: /pod-info
+      command:
+        - /bin/sh
+      args:
+        - -c
+        - cat /pod-info/namespace > /pod-data/index.html; sleep 3600
