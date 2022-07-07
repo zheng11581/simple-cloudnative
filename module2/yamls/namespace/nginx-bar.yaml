@@ -22,7 +22,7 @@ spec:
               fieldPath: metadata.namespace
   containers:
     - name: nginx-container
-      image: bitnami/nginx:1.16-centos-7
+      image: nginx
       volumeMounts:
         - name: shared-data
           mountPath: /usr/share/nginx/html
