@@ -206,8 +206,8 @@ spec:
     volumeMounts:
     - name: shared-data
       mountPath: /usr/share/nginx/html
-  - name: busybox-container
-    image: busybox
+  - name: centos-container
+    image: centos:7.9
     volumeMounts:
     - name: shared-data
       mountPath: /pod-data
