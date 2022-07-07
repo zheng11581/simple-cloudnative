@@ -202,7 +202,7 @@ spec:
       path: /mydata
   containers:
   - name: nginx-container
-    image: bitnami/nginx:1.23-debian-11
+    image: bitnami/nginx:1.16-centos-7
     volumeMounts:
     - name: shared-data
       mountPath: /usr/share/nginx/html
@@ -215,7 +215,7 @@ spec:
     - /bin/sh
     args: 
     - -c
-    - echo Hello from the debian container > /pod-data/index.html; sleep 3600
+    - echo Hello from the centos container > /pod-data/index.html; sleep 3600
 # kubeclt apply -f yamls/two-container-pod.yaml
 ```
 
