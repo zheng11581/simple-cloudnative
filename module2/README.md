@@ -262,7 +262,19 @@ nginx-demo   2/2     Running   0          12s   192.168.176.55   cn-master1   <n
 
 # curl 192.168.176.55
 bar
+
+# kubectl apply -f  yamls/namespace/quota.yaml
+# kubectl apply -f  yamls/namespace/execeed-pod.yaml 
+
+NAME            AGE   REQUEST                      LIMIT
+object-counts   55s   configmaps: 1/1, pods: 1/1  
+
+# kubectl apply -f yamls/namespace/execeed-pod.yaml
+Error from server (Forbidden): error when creating "yamls/namespace/execeed-pod.yaml": pods "pod-execeed" is forbidden: exceeded quota: object-counts, requested: pods=1, used: pods=1, limited: pods=1
+Error from server (Forbidden): error when creating "yamls/namespace/execeed-pod.yaml": pods "pod-execeed" is forbidden: exceeded quota: object-counts, requested: pods=1, used: pods=1, limited: pods=1
+
 ```
+
 
 - Spec：各种规格属性，定义各个对象的主要区别在这里
 
@@ -283,6 +295,7 @@ spec:
   - name: shared-data
     hostPath:      
       path: /mydata
+  containers:
   - name: centos-container # 容器名字
     image: centos:7.9.2009 # 容器使用的镜像和版本
     volumeMounts: # 容器挂载卷
