@@ -202,12 +202,12 @@ spec:
       path: /mydata
   containers:
   - name: nginx-container
-    image: nginx
+    image: nginx:1.23-debian-11
     volumeMounts:
     - name: shared-data
       mountPath: /usr/share/nginx/html
   - name: centos-container
-    image: centos:7.9
+    image: centos:7.9.2009
     volumeMounts:
     - name: shared-data
       mountPath: /pod-data
@@ -215,20 +215,23 @@ spec:
     - /bin/sh
     args: 
     - -c
-    - echo Hello from the debian container > /pod-data/index.html; sleep 600
+    - echo Hello from the debian container > /pod-data/index.html; sleep 3600
 # kubeclt apply -f yamls/two-container-pod.yaml
 ```
 
 - 它们可以直接使用 localhost 进行通信；
-
-```shell
-
-```
-
 - 它们看到的网络设备跟 Infra 容器看到的完全一样；
 - 一个 Pod 只有一个 IP 地址，也就是这个 Pod 的 Network Namespace 对应的 IP 地址；
 - 当然，其他的所有网络资源，都是一个 Pod 一份，并且被该 Pod 中的所有容器共享；
 - Pod 的生命周期只跟 Infra 容器一致，而与容器 A 和 B 无关。
+
+```shell
+# kubectl exec -it two-containers -c centos-container -- ip add
+
+```
+
+
+
 
 
 
