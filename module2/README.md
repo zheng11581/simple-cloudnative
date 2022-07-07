@@ -211,14 +211,20 @@ spec:
     volumeMounts:
     - name: shared-data
       mountPath: /pod-data
-    # command: ["/bin/sh"]
-    args: ["echo Hello from the debian container > /pod-data/index.html && sleep 600"]
+    command: 
+    - /bin/sh
+    args: 
+    - -c
+    - echo Hello from the debian container > /pod-data/index.html; sleep 600
 # kubeclt apply -f yamls/two-container-pod.yaml
 ```
 
-
-
 - 它们可以直接使用 localhost 进行通信；
+
+```shell
+
+```
+
 - 它们看到的网络设备跟 Infra 容器看到的完全一样；
 - 一个 Pod 只有一个 IP 地址，也就是这个 Pod 的 Network Namespace 对应的 IP 地址；
 - 当然，其他的所有网络资源，都是一个 Pod 一份，并且被该 Pod 中的所有容器共享；
