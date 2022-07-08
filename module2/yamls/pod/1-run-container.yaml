@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: centos-sleep
+spec:
+  restartPolicy: Never
+  containers:
+    - name: centos-container # 容器名字
+      image: centos:7.9.2009 # 容器使用的镜像和版本
+      command: # 容器执行的命令
+        - /bin/sh
+      args: # 容器执行命令的参数列表
+        - -c
+        - sleep 3600

@@ -282,25 +282,18 @@ Error from server (Forbidden): error when creating "yamls/namespace/execeed-pod.
 
 PodSpec详解
 
-- 容器组属性
+- 运行容器相关
 
-```yaml
+```yaml 
 apiVersion: v1
 kind: Pod
 metadata:
   name: centos-sleep
 spec:
   restartPolicy: Never
-  volumes:
-  - name: shared-data
-    hostPath:      
-      path: /mydata
   containers:
   - name: centos-container # 容器名字
     image: centos:7.9.2009 # 容器使用的镜像和版本
-    volumeMounts: # 容器挂载卷
-    - name: shared-data # 卷的名字
-      mountPath: /pod-data # 挂载容器内的目录
     command: # 容器执行的命令
     - /bin/sh
     args: # 容器执行命令的参数列表
