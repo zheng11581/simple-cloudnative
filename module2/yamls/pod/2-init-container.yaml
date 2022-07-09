@@ -20,11 +20,11 @@ spec:
     image: busybox:1.28
     volumeMounts:
     - name: tmp
-      mountPath: /tmp
-    command: ['sh', '-c', "until cat /tmp/file1; do echo waiting for file1 creation; sleep 2; done"]
+      mountPath: /initor
+    command: ['sh', '-c', "until cat /initor/file1; do echo waiting for file1 creation; sleep 2; done"]
   - name: initor-2
     image: busybox:1.28
     volumeMounts:
     - name: tmp
-      mountPath: /tmp
-    command: ['sh', '-c', "until cat /tmp/file2; do echo waiting for file2 creation; sleep 2; done"]
+      mountPath: /initor
+    command: ['sh', '-c', "until cat /initor/file2; do echo waiting for file2 creation; sleep 2; done"]
