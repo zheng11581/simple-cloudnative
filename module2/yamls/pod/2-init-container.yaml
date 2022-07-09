@@ -10,7 +10,7 @@ spec:
   - name: initor
     hostPath:
       path: /initor
-      type: Directory
+      subPathExpr: file
   containers:
   - name: app-container
     image: busybox:1.28
