@@ -9,7 +9,8 @@ spec:
   volumes:
   - name: tmp
     hostPath:
-      path: /tmp 
+      path: /tmp
+      type: Directory
   containers:
   - name: app-container
     image: busybox:1.28

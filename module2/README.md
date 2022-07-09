@@ -297,6 +297,13 @@ type PodSpec struct {
   ...
 }
 ```
+```shell
+# kubectl apply -f yamls/pod/2-init-container.yaml
+# kubectl get -f yamls/pod/2-init-container.yaml
+NAME         READY   STATUS     RESTARTS   AGE
+initc-demo   0/1     Init:0/2   0          9s
+# kubectl describe -f yamls/pod/2-init-container.yaml
+```
 
 - 生命周期（健康检查）相关
 
