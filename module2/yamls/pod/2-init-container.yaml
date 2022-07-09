@@ -1,0 +1,29 @@
+# https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+apiVersion: v1
+kind: Pod
+metadata:
+  name: initc-demo
+  labels:
+    app: busybox
+spec:
+  volumes:
+  - name: tmp
+    hostPath:
+      path: /tmp 
+  containers:
+  - name: app-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: initor-1
+    image: busybox:1.28
+    volumeMounts:
+    - name: tmp
+      mountPath: /tmp
+    command: ['sh', '-c', "until cat /tmp/file1; do echo waiting for file1 creation; sleep 2; done"]
+  - name: initor-2
+    image: busybox:1.28
+    volumeMounts:
+    - name: tmp
+      mountPath: /tmp
+    command: ['sh', '-c', "until cat /tmp/file2; do echo waiting for file2 creation; sleep 2; done"]
