@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: initc-demo
+  name: init-demo
   labels:
     app: busybox
 spec:
