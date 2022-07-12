@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name:  pv1
+spec:
+  capacity:
+    storage: 10Mi  #pv的存储空间容量
+  accessModes: ["ReadWriteOnce"]
+  rbd:
+    monitors:
+    - 'rook-ceph-mon-a.rook-ceph:6789'
+    pool: kube
+    image: foo
+    fsType: ext4
+    readOnly: true
+    imageformat: "2"
+    imagefeatures: "layering"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name:  pv2
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 20Mi
+  accessModes: ["ReadWriteMany"]
+  rbd:
+    monitors:
+    - 'rook-ceph-mon-a.rook-ceph:6789'
+    pool: kube
+    image: foo
+    fsType: ext4
+    readOnly: true
+    imageformat: "2"
+    imagefeatures: "layering"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name:  pv3
+spec:
+  capacity:
+    storage: 30Mi
+  accessModes: ["ReadOnlyMany"]
+  rbd:
+    monitors:
+    - 'rook-ceph-mon-a.rook-ceph:6789'
+    pool: kube
+    image: foo
+    fsType: ext4
+    readOnly: true
+    imageformat: "2"
+    imagefeatures: "layering"
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: static-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 20Mi
+# ---
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: static-pv-pod
+# spec:
+#   volumes:
+#     - name: static-pv-storage
+#       persistentVolumeClaim:
+#         claimName: static-pvc
+#   containers:
+#     - name: pv-container
+#       image: nginx
+#       ports:
+#         - containerPort: 80
+#           name: "http-server"
+#       volumeMounts:
+#         - mountPath: "/mnt/static"
+#           name: static-pv-storage
