@@ -3,6 +3,7 @@ kind: PersistentVolume
 metadata:
   name:  pv1
 spec:
+  storageClassName: manul
   persistentVolumeReclaimPolicy: Delete
   capacity:
     storage: 10Mi  #pv的存储空间容量
@@ -20,6 +21,7 @@ kind: PersistentVolume
 metadata:
   name:  pv2
 spec:
+  storageClassName: manul
   persistentVolumeReclaimPolicy: Delete
   capacity:
     storage: 20Mi
@@ -37,6 +39,7 @@ kind: PersistentVolume
 metadata:
   name:  pv3
 spec:
+  storageClassName: manul
   capacity:
     storage: 30Mi
   accessModes: ["ReadOnlyMany"]
