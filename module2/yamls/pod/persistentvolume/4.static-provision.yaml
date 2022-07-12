@@ -47,18 +47,18 @@ spec:
     image: foo
     fsType: ext4
     readOnly: true
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: static-pvc
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   resources:
-#     requests:
-#       storage: 20Mi
-# ---
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: static-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Mi
+---
 # apiVersion: v1
 # kind: Pod
 # metadata:
