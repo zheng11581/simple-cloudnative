@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dynamic-rook-ceph
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ceph-pv-pod
+spec:
+  volumes:
+    - name: ceph-pv-storage
+      persistentVolumeClaim:
+        claimName: dynamic-rook-ceph
+  containers:
+    - name: ceph-pv-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/mnt/ceph"
+          name: ceph-pv-storage
