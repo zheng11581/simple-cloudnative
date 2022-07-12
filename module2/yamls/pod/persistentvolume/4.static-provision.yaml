@@ -3,6 +3,7 @@ kind: PersistentVolume
 metadata:
   name:  pv1
 spec:
+  persistentVolumeReclaimPolicy: Delete
   capacity:
     storage: 10Mi  #pv的存储空间容量
   accessModes: ["ReadWriteOnce"]
@@ -14,7 +15,6 @@ spec:
     fsType: ext4
     readOnly: true
     imageformat: "2"
-    imagefeatures: "layering"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -32,8 +32,6 @@ spec:
     image: foo
     fsType: ext4
     readOnly: true
-    imageformat: "2"
-    imagefeatures: "layering"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -50,8 +48,6 @@ spec:
     image: foo
     fsType: ext4
     readOnly: true
-    imageformat: "2"
-    imagefeatures: "layering"
 # ---
 # apiVersion: v1
 # kind: PersistentVolumeClaim
