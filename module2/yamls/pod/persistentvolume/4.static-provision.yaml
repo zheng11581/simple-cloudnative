@@ -53,6 +53,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: static-pvc
 spec:
+  storageClassName: manul
   accessModes:
     - ReadWriteOnce
   resources:
