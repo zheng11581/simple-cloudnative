@@ -58,7 +58,6 @@ metadata:
 spec:
   storageClassName: manul
   accessModes:
-    - ReadWriteOnce
     - ReadWriteMany
   resources:
     requests:
