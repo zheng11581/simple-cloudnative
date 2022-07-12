@@ -59,6 +59,7 @@ spec:
   storageClassName: manul
   accessModes:
     - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 20Mi
