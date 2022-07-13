@@ -10,7 +10,7 @@
 Dynamic Provisioning Demo
 
 ```shell
-# 
+# kubectl apply -f persistentvolume/4.dynamic-provision.yaml
 ```
 
 ### Ephemeral Volumes
