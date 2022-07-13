@@ -170,6 +170,8 @@ type PodSpec struct {
 
 [Volumes](./yamls/pod/persistentvolume/volumes.MD)
 
+[ImagePullSecrets](./yamls/pod/imageregistry/5-image-pull.MD)
+
 
 - 生命周期（健康检查）相关
 
