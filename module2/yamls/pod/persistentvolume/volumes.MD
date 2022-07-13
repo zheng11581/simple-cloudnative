@@ -9,8 +9,24 @@
 
 Dynamic Provisioning Demo
 
+声明PVC并给Pod绑定PV
 ```shell
-# kubectl apply -f persistentvolume/4.dynamic-provision.yaml
+# kubectl apply -f 4.dynamic-provision.yaml
+```
+
+向Pod挂载的存储上写入数据
+```shell
+# kubectl exec -it ceph-pv-pod -- sh
+# cd /mnt/ceph
+# echo hello world > hello.log
+# exit
+```
+
+删除、重建Pod，写入数据依然保留
+```shell
+# kubectl delete pod ceph-pv-pod
+# kubectl apply -f 4.dynamic-provision.yaml
+# kubectl exec -it ceph-pv-pod -- cat /mnt/ceph/hello.log
 ```
 
 ### Ephemeral Volumes
