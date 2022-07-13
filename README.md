@@ -1,5 +1,5 @@
 # simple-cloudnative
-## 分享目的，
+## 分享目的
 - 到底什么事云原生
   - 应用架构角度：DevOps CICD Container Microservice
   - 基础设施角度：在公有云、私有云、混合云上构建和运行可弹性伸缩的应用

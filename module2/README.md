@@ -18,7 +18,6 @@ Kubernetes是谷歌开源的容器集群管理系统，是Google多年大规模�
 Kubernetes分布式架构
 ![Kubernetes架构](imgs/kubernetes.jpeg)
 
-
 分布式组件的功能
 ![Kubernetes组件](./imgs/kubernetes-detail.jpeg)
 
@@ -41,75 +40,6 @@ Kubernetes分布式架构
 - Dashboard：提供GUI;
 - Fluentd-Elasticsearch：提供集群日志采集、存储与查询。
 
-### ETCD（自行了解）
-
-安装
-
-```shell
-ETCD_VER=v3.5.4
-
-# choose either URL
-GOOGLE_URL=https://storage.googleapis.com/etcd
-GITHUB_URL=https://github.com/etcd-io/etcd/releases/download
-DOWNLOAD_URL=${GITHUB_URL}
-
-rm -f /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
-rm -rf /tmp/etcd-download-test && mkdir -p /tmp/etcd-download-test
-
-curl -L ${DOWNLOAD_URL}/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
-tar xzvf /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz -C /tmp/etcd-download-test --strip-components=1
-rm -f /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
-
-/tmp/etcd-download-test/etcd --version
-/tmp/etcd-download-test/etcdctl version
-/tmp/etcd-download-test/etcdutl version
-```
-
-使用场景
-
-- 基本的key-value存储
-
-```shell
-# etcdctl member list--write-out=table
-+------------------+---------+---------+-----------------------+-----------------------+------------+
-|        ID        | STATUS  |  NAME   |      PEER ADDRS       |     CLIENT ADDRS      | IS LEARNER |
-+------------------+---------+---------+-----------------------+-----------------------+------------+
-| 8e9e05c52164694d | started | default | http://localhost:2380 | http://localhost:2379 |      false |
-+------------------+---------+---------+-----------------------+-----------------------+------------+
-# etcdctl put x 0
-OK
-# etcdctl get x 
-x
-0
-```
-
-- 服务注册与发现
-
-- 基于监听机制的分布式系统
-
-重要原理
-
-- 基于Raft的一致性
-  - http://thesecretlivesofdata.com/raft/   
-  - Leader Election
-  - Log Relication
-
-- 基于Raft的安全性
-  - 选举安全性：每个Term只能选举出一个Leader
-  - Leader完整性：只有Term较大，Index较大的Cadidate可以当选
-
-- 基于Raft的失效处理
-  - Leader失效：恢复后会成为Follower，并被新的Leader数据覆盖
-  - Follower不可用：恢复后继续作为Follower，同步Leader数据
-  - 多个Candidate：随机一个Leader Election timeout（150~300ms），重新发起投票
-
-- WAL日志
-
-![](imgs/wal_and_mvcc.jpg)
-
-- Watch机制
-
-
 
 ### Kubernetes的架构原则
 
@@ -130,7 +60,6 @@ x
 - 所有API对象都是声明式的
 
 ![声明式](./imgs/declare.jpg)
-
 
 - API对象是彼此互补而且可组合的
 高内聚，松耦合
@@ -188,36 +117,8 @@ Infra 容器一定要占用极少的资源，所以它使用的是一个非常�
 
 #### 为什么需要Pod：容器设计模式
 
-```shell 
-# cat yamls/two-container-pod.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: two-containers
-spec:
-  restartPolicy: Never
-  volumes:
-  - name: shared-data
-    hostPath:      
-      path: /mydata
-  containers:
-  - name: nginx-container
-    image: bitnami/nginx:1.16-centos-7
-    volumeMounts:
-    - name: shared-data
-      mountPath: /usr/share/nginx/html
-  - name: centos-container
-    image: centos:7.9.2009
-    volumeMounts:
-    - name: shared-data
-      mountPath: /pod-data
-    command: 
-    - /bin/sh
-    args: 
-    - -c
-    - echo Hello from the centos container > /pod-data/index.html; sleep 3600
-# kubeclt apply -f yamls/two-container-pod.yaml
-```
+[Two Containers](./yamls/pod/container/two-containers.MD)
+
 A B两个容器进程实际上是有“超亲密关系”的，他们需要通过文件系统进行通信，还有以下“超亲密关系”：
 
 - 它们可以直接使用 localhost 进行通信；
@@ -225,11 +126,6 @@ A B两个容器进程实际上是有“超亲密关系”的，他们需要通�
 - 一个 Pod 只有一个 IP 地址，也就是这个 Pod 的 Network Namespace 对应的 IP 地址；
 - 当然，其他的所有网络资源，都是一个 Pod 一份，并且被该 Pod 中的所有容器共享；
 - Pod 的生命周期只跟 Infra 容器一致，而与容器 A 和 B 无关。
-
-```shell
-# kubectl exec -it two-containers -c centos-container -- hostname -i
-# kubectl exec -it two-containers -c nginx-container -- hostname -i
-```
 
 #### Pod API对象的分解
 
@@ -242,43 +138,14 @@ A B两个容器进程实际上是有“超亲密关系”的，他们需要通�
 
 - ObjectMeta
   - Name
-  - Namespace：隔离API对象、做资源隔离
+  - [Namespace：隔离API对象、做资源隔离](./yamls/namespace/namespace-quota.MD)
   - Labels：给对象打标签，可以做filter/selector
   - Annotations
   - ...
 
-```shell
-# kubectl apply -f yamls/namespace/nginx-foo.yaml
-# kubectl get pod -n foo -owide
-NAME         READY   STATUS    RESTARTS   AGE   IP               NODE         NOMINATED NODE   READINESS GATES
-nginx-demo   2/2     Running   0          10s   192.168.176.54   cn-master1   <none>           <none>
-# curl 192.168.176.54
-foo
-
-# kubectl apply -f yamls/namespace/nginx-bar.yaml
-# kubectl get pod -n bar -owide
-NAME         READY   STATUS    RESTARTS   AGE   IP               NODE         NOMINATED NODE   READINESS GATES
-nginx-demo   2/2     Running   0          12s   192.168.176.55   cn-master1   <none>           <none>
-
-# curl 192.168.176.55
-bar
-
-# kubectl apply -f  yamls/namespace/quota.yaml
-# kubectl apply -f  yamls/namespace/execeed-pod.yaml 
-
-NAME            AGE   REQUEST                      LIMIT
-object-counts   55s   configmaps: 1/1, pods: 1/1  
-
-# kubectl apply -f yamls/namespace/execeed-pod.yaml
-Error from server (Forbidden): error when creating "yamls/namespace/execeed-pod.yaml": pods "pod-execeed" is forbidden: exceeded quota: object-counts, requested: pods=1, used: pods=1, limited: pods=1
-Error from server (Forbidden): error when creating "yamls/namespace/execeed-pod.yaml": pods "pod-execeed" is forbidden: exceeded quota: object-counts, requested: pods=1, used: pods=1, limited: pods=1
-
-```
-
-
 - Spec：各种规格属性，定义各个对象的主要区别在这里
 
-- Status：对象的运行状态（需不要自己管理）
+- Status：对象的运行状态（不需要自己管理）
 
 PodSpec详解
 
@@ -293,33 +160,11 @@ type PodSpec struct {
   Volumes []Volume `json:"volumes,omitempty" patchStrategy:"merge,retainKeys" patchMergeKey:"name" protobuf:"bytes,1,rep,name=volumes"`
   ImagePullSecrets []LocalObjectReference `json:"imagePullSecrets,omitempty" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,15,rep,name=imagePullSecrets"`
   RuntimeClassName *string `json:"runtimeClassName,omitempty" protobuf:"bytes,29,opt,name=runtimeClassName"`
-  EnableServiceLinks *bool `json:"enableServiceLinks,omitempty" protobuf:"varint,30,opt,name=enableServiceLinks"`
   ...
 }
 ```
 
-[InitContainers](./yamls/pod/container/2-init-container.yaml)
-
-```shell
-# kubectl apply -f yamls/pod/container/2-init-container.yaml
-# kubectl get -f yamls/pod/container/2-init-container.yaml
-NAME         READY   STATUS     RESTARTS   AGE   IP             NODE    NOMINATED NODE   READINESS GATES
-initc-demo   0/1     Init:0/2   0          38s   10.244.104.4   node2   <none>           <none>
-
-# create file1 in node2
-# touch /initor/file1
-
-# kubectl get -f yamls/pod/container/2-init-container.yaml
-NAME         READY   STATUS     RESTARTS   AGE   IP             NODE    NOMINATED NODE   READINESS GATES
-initc-demo   0/1     Init:1/2   0          85s   10.244.104.4   node2   <none>           <none>
-
-# create file1 in node2
-# touch /initor/file2
-
-# kubectl get -f yamls/pod/container/2-init-container.yaml
-NAME         READY   STATUS    RESTARTS   AGE    IP             NODE    NOMINATED NODE   READINESS GATES
-initc-demo   1/1     Running   0          108s   10.244.104.4   node2   <none>           <none>
-```
+[InitContainers](./yamls/pod/container/2-initcontainer.MD)
 
 [EphemeralContainers](./yamls/pod/container/3-ephemeral-container.MD)
 
@@ -335,7 +180,7 @@ type PodSpec struct {
   ReadinessGates []PodReadinessGate `json:"readinessGates,omitempty" protobuf:"bytes,28,opt,name=readinessGates"`
   TerminationGracePeriodSeconds *int64 `json:"terminationGracePeriodSeconds,omitempty" protobuf:"varint,4,opt,name=terminationGracePeriodSeconds"`
   ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty" protobuf:"varint,5,opt,name=activeDeadlineSeconds"`
-
+  EnableServiceLinks *bool `json:"enableServiceLinks,omitempty" protobuf:"varint,30,opt,name=enableServiceLinks"`
   ...
 }
 
