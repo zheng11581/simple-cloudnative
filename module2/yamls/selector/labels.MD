@@ -11,4 +11,8 @@
 # kubectl get pod -l app=nginx --show-labels
 ```
 
-### 
+### Expose nginx service to the cluster
+
+```shell
+# kubectl apply -f 2-endpoint-selector.yaml
+```
