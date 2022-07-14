@@ -139,7 +139,7 @@ A B两个容器进程实际上是有“超亲密关系”的，他们需要通�
 - ObjectMeta
   - Name
   - [Namespace：隔离API对象、做资源隔离](./yamls/namespace/namespace-quota.MD)
-  - Labels：给对象打标签，可以做filter/selector
+  - [Labels：给对象打标签，可以做filter/selector](./yamls/selector/labels.MD)
   - Annotations
   - ...
 
