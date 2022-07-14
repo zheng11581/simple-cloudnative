@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: nginx-rs
-  lables:
+  labels:
     app: nginx
 spec:
   replicas: 5
