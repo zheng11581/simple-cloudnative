@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: always-restart
+spec:
+  restartPolicy: Always #  Restart container with delay (10s, 20s, 40s, …), that is capped at five minutes
+  containers:
+    - name: always-restart
+      image: centos
+      command: ["/bin/sh"]
+      args: ["-c", "exit 404"]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: never-restart
+spec:
+  restartPolicy: Never #  Restart container with delay (10s, 20s, 40s, …), that is capped at five minutes
+  containers:
+    - name: never-restart
+      image: centos
+      command: ["/bin/sh"]
+      args: ["-c", "exit 404"]

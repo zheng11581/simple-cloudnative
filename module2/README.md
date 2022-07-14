@@ -186,7 +186,17 @@ type PodSpec struct {
   ...
 }
 
+// A single application container that you want to run within a pod.
+type Container struct {
+	LivenessProbe *Probe `json:"livenessProbe,omitempty" protobuf:"bytes,10,opt,name=livenessProbe"`
+	ReadinessProbe *Probe `json:"readinessProbe,omitempty" protobuf:"bytes,11,opt,name=readinessProbe"`
+	StartupProbe *Probe `json:"startupProbe,omitempty" protobuf:"bytes,22,opt,name=startupProbe"`
+  Lifecycle *Lifecycle `json:"lifecycle,omitempty" protobuf:"bytes,12,opt,name=lifecycle"`
+}
+
 ```
+
+[RestartPolicy](./yamls/pod/lifecycle/6-pod-restartpolicy.yaml)
 
 - 调度相关
 
