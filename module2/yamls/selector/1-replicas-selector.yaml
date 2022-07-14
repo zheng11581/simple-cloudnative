@@ -17,6 +17,6 @@ spec:
       restartPolicy: Always # Must be Always
       containers:
         - name: nginx-container
-          image: bitnami/nginx:1.16-centos-7
+          image: nginx
           ports:
             - containerPort: 8080 # over port in image
