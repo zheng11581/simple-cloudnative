@@ -1,7 +1,7 @@
 apiVersion: apps/v1
-kind: ReplicaSet
+kind: Deployment
 metadata:
-  name: nginx-rs
+  name: nginx-deploy
   labels:
     app: nginx
 spec:
@@ -14,9 +14,9 @@ spec:
       labels:
         app: nginx
     spec:
-      restartPolicy: Always # Must be Always
       containers:
-        - name: nginx-container
+        - name: web-demo
           image: nginx
           ports:
             - containerPort: 8080 # over port in image
+              protocol: TCP
