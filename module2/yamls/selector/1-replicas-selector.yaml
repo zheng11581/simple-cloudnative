@@ -11,7 +11,7 @@ spec:
       app: nginx
   template:
     metadata:
-      lables:
+      labels:
         app: nginx
     spec:
       restartPolicy: Never
