@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  template:
+  template: # Pod template
     metadata:
       labels:
         app: nginx
@@ -18,5 +18,5 @@ spec:
         - name: web-demo
           image: nginx
           ports:
-            - containerPort: 8080 # over port in image
+            - containerPort: 8080 # 定义containerPorts的目的纯粹是为了记录，实际暴露的还是80
               protocol: TCP
