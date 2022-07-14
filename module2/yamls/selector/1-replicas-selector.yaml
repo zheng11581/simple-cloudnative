@@ -14,7 +14,7 @@ spec:
       labels:
         app: nginx
     spec:
-      restartPolicy: Never
+      restartPolicy: Always # Must be Always
       containers:
         - name: nginx-container
           image: bitnami/nginx:1.16-centos-7
