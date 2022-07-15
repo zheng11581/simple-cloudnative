@@ -4,7 +4,7 @@ metadata:
   name: readiness-demo
 spec:
   containers:
-    - name: http-probe
+    - name: nginx-demo
       image: nginx
       readinessProbe:
         httpGet:
