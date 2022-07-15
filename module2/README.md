@@ -198,7 +198,9 @@ type Container struct {
 
 [RestartPolicy](./yamls/pod/lifecycle/6-restartpolicy.MD)
 
-[LivenessProbe](./yamls/pod/lifecycle/7-graceful-start.MD)
+[LivenessProbe](./yamls/pod/lifecycle/7-graceful-start.MD#2-liveness-probe)
+
+[RedinessProbe](./yamls/pod/lifecycle/7-graceful-start.MD#1-rediness-probe)
 
 - 调度相关
 

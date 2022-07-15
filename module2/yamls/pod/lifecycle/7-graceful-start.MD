@@ -1,6 +1,6 @@
 ### 1. Rediness Probe
 
-Get pod readiness-demo
+Create pod readiness-demo
 
 ```shell
 # kubectl apply -f 7-rediness-probe.yaml
@@ -29,3 +29,9 @@ Events:
 
 ### 2. Liveness Probe
 
+Create pod liveness-demo
+
+```shell
+# kubectl apply -f 7-liveness-probe.yaml
+# kubectl get pod liveness-demo
+```
