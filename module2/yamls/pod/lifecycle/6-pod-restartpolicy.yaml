@@ -8,7 +8,7 @@ spec:
     - name: always-restart
       image: centos
       command: ["/bin/sh"]
-      args: ["-c", "exit 404"]
+      args: ["-c", "exit 137"]
 ---
 apiVersion: v1
 kind: Pod
@@ -20,4 +20,4 @@ spec:
     - name: never-restart
       image: centos
       command: ["/bin/sh"]
-      args: ["-c", "exit 404"]
+      args: ["-c", "exit 137"]
