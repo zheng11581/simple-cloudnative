@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: always-restart
 spec:
-  restartPolicy: Always #  Restart container with delay (10s, 20s, 40s, …), that is capped at five minutes
+  restartPolicy: Always #  Restart container with delay (10s, 20s, 40s, …), that is capped at 5 minutes
   containers:
     - name: always-restart
       image: centos
@@ -15,7 +15,7 @@ kind: Pod
 metadata:
   name: never-restart
 spec:
-  restartPolicy: Never #  Restart container with delay (10s, 20s, 40s, …), that is capped at five minutes
+  restartPolicy: Never #  Restart container with delay (10s, 20s, 40s, …), that is capped at 5 minutes
   containers:
     - name: never-restart
       image: centos
