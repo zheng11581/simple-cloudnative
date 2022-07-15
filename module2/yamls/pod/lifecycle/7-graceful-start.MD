@@ -35,3 +35,31 @@ Create pod liveness-demo
 # kubectl apply -f 7-liveness-probe.yaml
 # kubectl get pod liveness-demo
 ```
+
+Describe the Pod
+
+```shell
+# kubectl describe pod liveness-demo
+...
+Events:
+  Type     Reason     Age                    From               Message
+  ----     ------     ----                   ----               -------
+  Normal   Scheduled  8m40s                  default-scheduler  Successfully assigned default/liveness-demo to kbadmnode4
+  Normal   Pulled     8m38s                  kubelet            Successfully pulled image "centos" in 773.672774ms
+  Normal   Pulled     7m12s                  kubelet            Successfully pulled image "centos" in 15.509891433s
+  Normal   Created    5m42s (x3 over 8m38s)  kubelet            Created container liveness
+  Normal   Started    5m42s (x3 over 8m38s)  kubelet            Started container liveness
+  Normal   Pulled     5m42s                  kubelet            Successfully pulled image "centos" in 15.512520281s
+  Normal   Killing    4m58s (x3 over 7m58s)  kubelet            Container liveness failed liveness probe, will be restarted
+  Normal   Pulling    4m28s (x4 over 8m39s)  kubelet            Pulling image "centos"
+  Warning  Unhealthy  3m38s (x10 over 8m8s)  kubelet            Liveness probe failed: cat: /tmp/healthy: No such file or directory
+
+```
+
+
+### 3. Lifecycle postStart
+
+
+```shell
+# kubectl apply -f 7-poststart.yaml
+```

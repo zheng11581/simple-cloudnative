@@ -202,6 +202,8 @@ type Container struct {
 
 [RedinessProbe](./yamls/pod/lifecycle/7-graceful-start.MD#1-rediness-probe)
 
+[Lifecycle-postStart](./yamls/pod/lifecycle/7-graceful-start.MD#3-lifecycle-poststart)
+
 - 调度相关
 
 ```golang
