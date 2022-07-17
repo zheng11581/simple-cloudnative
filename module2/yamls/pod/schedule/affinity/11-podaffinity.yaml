@@ -22,17 +22,17 @@ spec:
                 values:
                 - redis
             topologyKey: topology.kubernetes.io/region
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - pod-affinity-demo
-              topologyKey: topology.kubernetes.io/region
+        # podAntiAffinity:
+        #   preferredDuringSchedulingIgnoredDuringExecution:
+        #   - weight: 100
+        #     podAffinityTerm:
+        #       labelSelector:
+        #         matchExpressions:
+        #         - key: app
+        #           operator: In
+        #           values:
+        #           - pod-affinity-demo
+        #       topologyKey: topology.kubernetes.io/region
       containers:
       - name: with-pod-affinity
         image: ibmcom/pause:3.0
