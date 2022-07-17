@@ -13,6 +13,7 @@ node2     Ready    <none>                 16d   v1.21.14   kubernetes.io/hostnam
 
 ```shell
 # kubectl label nodes node2 disktype=ssd
+# kubectl label nodes node1 disktype=hdd
 ```
 
 3. Verify that your chosen node has a disktype=ssd label
