@@ -181,8 +181,6 @@ type PodSpec struct {
   RestartPolicy RestartPolicy `json:"restartPolicy,omitempty" protobuf:"bytes,3,opt,name=restartPolicy,casttype=RestartPolicy"`
   ReadinessGates []PodReadinessGate `json:"readinessGates,omitempty" protobuf:"bytes,28,opt,name=readinessGates"`
   TerminationGracePeriodSeconds *int64 `json:"terminationGracePeriodSeconds,omitempty" protobuf:"varint,4,opt,name=terminationGracePeriodSeconds"`
-  ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty" protobuf:"varint,5,opt,name=activeDeadlineSeconds"`
-  EnableServiceLinks *bool `json:"enableServiceLinks,omitempty" protobuf:"varint,30,opt,name=enableServiceLinks"`
   ...
 }
 
@@ -198,11 +196,21 @@ type Container struct {
 
 [RestartPolicy](./yamls/pod/lifecycle/6-restartpolicy.MD)
 
+[StartupProbe]()
+
 [LivenessProbe](./yamls/pod/lifecycle/7-graceful-start.MD#2-liveness-probe)
 
 [RedinessProbe](./yamls/pod/lifecycle/7-graceful-start.MD#1-rediness-probe)
 
 [Lifecycle-postStart](./yamls/pod/lifecycle/7-graceful-start.MD#3-lifecycle-poststart)
+
+[ReadinessGates](./yamls/pod/lifecycle/7-graceful-start.MD#4-rediness-gate)
+
+[Lifecycle-preStop]()
+
+[TerminationGracePeriodSeconds]()
+
+
 
 - 调度相关
 
