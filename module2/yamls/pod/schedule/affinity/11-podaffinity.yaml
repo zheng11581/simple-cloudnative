@@ -4,6 +4,9 @@ metadata:
   name: pod-affinity-demo
 spec:
   replicas: 2
+  selector:
+    labels:
+      app: pod-affinity-demo
   template:
     metadata:
       labels:
