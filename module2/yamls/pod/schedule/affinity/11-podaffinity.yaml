@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: pod-affinity-demo
 spec:
-  replica: 2
+  replicas: 2
   template:
     metadata:
       labels:
