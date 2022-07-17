@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-affinity-demo
+spec:
+  replica: 2
+  template:
+    metadata:
+      labels:
+        app: pod-affinity-demo
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mysql
+            topologyKey: topology.kubernetes.io/region
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - pod-affinity-demo
+              topologyKey: topology.kubernetes.io/zone
+      containers:
+      - name: with-pod-affinity
+        image: ibmcom/pause:3.0
