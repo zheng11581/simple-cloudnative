@@ -208,7 +208,7 @@ type Container struct {
 
 [Lifecycle-preStop](./yamls/pod/lifecycle/graceful-stop/8-prestop.yaml)
 
-[TerminationGracePeriodSeconds]()
+[TerminationGracePeriodSeconds](./yamls/pod/lifecycle/graceful-stop/8-termination-graceful.yaml)
 
 
 
@@ -232,6 +232,8 @@ type PodSpec struct {
   ...
 }
 ```
+
+[NodeSelector]()
 
 
 - 网络与安全相关
