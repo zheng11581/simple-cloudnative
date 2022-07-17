@@ -5,7 +5,7 @@ metadata:
 spec:
   replicas: 2
   selector:
-    labels:
+    matchLabels:
       app: pod-affinity-demo
   template:
     metadata:
