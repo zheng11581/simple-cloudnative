@@ -3,7 +3,7 @@
 Create pod readiness-demo
 
 ```shell
-# kubectl apply -f 7-rediness-probe.yaml
+# kubectl apply -f 7-readiness-probe.yaml
 # kubectl get pod readiness-demo
 NAME             READY   STATUS    RESTARTS   AGE
 readiness-demo   0/1     Running   0          43s
@@ -59,7 +59,45 @@ Events:
 
 ### 3. Lifecycle postStart
 
+Create pod poststart-demo
 
 ```shell
 # kubectl apply -f 7-poststart.yaml
+
+# kubectl apply -f 7-poststart.yaml
+NAME             READY   STATUS    RESTARTS   AGE    IP              NODE    NOMINATED NODE   READINESS GATES
+poststart-demo   1/1     Running   0          118s   10.244.104.29   node2   <none>           <none>
+
+# curl 10.244.104.29
+
+Hello from the postStart handler
 ```
+
+### 4. Rediness gate
+
+Create pod readiness-gate and svc readiness-gate
+
+```shell
+# kubectl apply -f 7-readiness-gates.yaml
+```
+
+Curl the Nginx pod，succeed
+
+```shell
+# kubectl get pod readiness-gate -owide
+NAME             READY   STATUS    RESTARTS   AGE     IP               NODE    NOMINATED NODE   READINESS GATES
+readiness-gate   1/1     Running   0          5m48s   10.244.166.185   node1   <none>           0/1
+
+# curl 10.244.166.185
+...
+<title>Welcome to nginx!</title>
+...
+
+# kubectl get svc readiness-gate -owide
+NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE     SELECTOR
+readiness-gate   ClusterIP   10.105.92.39   <none>        80/TCP    9m36s   app=readiness-gate
+
+# curl 10.105.92.39
+curl: (7) Failed to connect to 10.105.92.39 port 80: Connection refused
+```
+
