@@ -206,7 +206,7 @@ type Container struct {
 
 [ReadinessGates](./yamls/pod/lifecycle/7-graceful-start.MD#4-rediness-gate)
 
-[Lifecycle-preStop]()
+[Lifecycle-preStop](./yamls/pod/lifecycle/graceful-stop/8-prestop.yaml)
 
 [TerminationGracePeriodSeconds]()
 
