@@ -17,7 +17,7 @@ spec:
               - key: app
                 operator: In
                 values:
-                - mysql
+                - redis
             topologyKey: topology.kubernetes.io/region
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
