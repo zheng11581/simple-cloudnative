@@ -21,7 +21,7 @@ spec:
                 operator: In
                 values:
                 - redis
-            # topologyKey: topology.kubernetes.io/region
+            topologyKey: topology.kubernetes.io/region
         # podAntiAffinity:
         #   preferredDuringSchedulingIgnoredDuringExecution:
         #   - weight: 100
