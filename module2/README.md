@@ -235,7 +235,7 @@ type PodSpec struct {
 
 [NodeSelector](./yamls/pod/schedule/nodeselector/9-nodeselector.MD)
 
-[Affinity-NodeAffinity & NodeAntiAffinity]()
+[Affinity-NodeAffinity & NodeAntiAffinity](./yamls/pod/schedule/affinity/10-nodeaffinity.MD)
 
 [Affinity-PodAffinity & PodAntiAffinity]()
 

@@ -12,6 +12,7 @@ spec:
             operator: In
             values:
             - linux
+    nodeAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
       - weight: 1
         preference:
