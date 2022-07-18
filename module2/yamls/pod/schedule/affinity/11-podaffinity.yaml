@@ -1,18 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pod-affinity-demo
+  name: web-server
 spec:
-  replicas: 2
   selector:
     matchLabels:
-      app: pod-affinity-demo
+      app: web-store
+  replicas: 3
   template:
     metadata:
       labels:
-        app: pod-affinity-demo
+        app: web-store
     spec:
       affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - web-store
+              topologyKey: "kubernetes.io/hostname"
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
@@ -20,19 +29,8 @@ spec:
                   - key: app
                     operator: In
                     values:
-                      - redis
-              topologyKey: kubernetes.io/os
-        # podAntiAffinity:
-        #   preferredDuringSchedulingIgnoredDuringExecution:
-        #   - weight: 100
-        #     podAffinityTerm:
-        #       labelSelector:
-        #         matchExpressions:
-        #         - key: app
-        #           operator: In
-        #           values:
-        #           - pod-affinity-demo
-        #       topologyKey: topology.kubernetes.io/region
+                      - store
+              topologyKey: "kubernetes.io/hostname"
       containers:
-        - name: with-pod-affinity
-          image: ibmcom/pause:3.0
+        - name: web-app
+          image: nginx:1.16-alpine
