@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: without-tolerations-demo
+  labels:
+    env: test
+spec:
+  nodeName: kbadmnode1
+  containers:
+    - name: nginx
+      image: nginx
+      imagePullPolicy: IfNotPresent
+  # tolerations:
+  #   - key: "example-key"
+  #     operator: "Exists"
+  #     effect: "NoSchedule"

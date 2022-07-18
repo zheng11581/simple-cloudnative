@@ -237,7 +237,9 @@ type PodSpec struct {
 
 [Affinity-NodeAffinity & NodeAntiAffinity](./yamls/pod/schedule/affinity/10-nodeaffinity.MD)
 
-[Affinity-PodAffinity & PodAntiAffinity]()
+[Affinity-PodAffinity & PodAntiAffinity](./yamls/pod/schedule/affinity/11-podaffinity.MD)
+
+[Tolerations]()
 
 - 网络与安全相关
 
