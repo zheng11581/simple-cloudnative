@@ -2,6 +2,16 @@
 
 ```shell
 # kubectl taint nodes kbadmnode1 team1=:NoSchedule
+# kubectl taint nodes kbadmnode2 team1=:NoSchedule
+# kubectl taint nodes kbadmnode3 team1=:NoSchedule
+# kubectl taint nodes kbadmnode4 team1=:NoSchedule
+# kubectl taint nodes kbadmnode5 team1=:NoSchedule
+
+# kubectl get node kbadmnode1 -oyaml
+
+  taints:
+  - effect: NoSchedule
+    key: team1
 ```
 
 ### Create a Pod without tolerations

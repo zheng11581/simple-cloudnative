@@ -5,7 +5,6 @@ metadata:
   labels:
     env: test
 spec:
-  nodeName: kbadmnode1
   containers:
     - name: nginx
       image: nginx
