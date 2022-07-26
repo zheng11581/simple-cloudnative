@@ -81,7 +81,7 @@ Kubernetes的高层API设计，一定是以Kubernetes的业务为基础出发，
 
 - Deployment
 
-- [Server](./apis/service/service.MD)
+- [Service](./apis/service/service.MD)
 
 
 - StatefulSet
