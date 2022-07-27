@@ -77,14 +77,18 @@ Kubernetes的高层API设计，一定是以Kubernetes的业务为基础出发，
 
 - [Pod](./apis/pod/pod.MD)
 
+- ConfigMap
+
+- Secret
+
 - ReplicaSet
 
 - Deployment
 
 - [Service](./apis/service/service.MD)
 
+- Job
+- CronJob
 
 - StatefulSet
 - DaemonSet
-- Job
-- CronJob
