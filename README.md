@@ -12,5 +12,5 @@
 - [预习：安装Docker](./module0/README.md)
 - [模块一：Docker核心技术](./module1/README.md)
 - [模块二：Kubernetes基础架构和对象](./module2/README.md)
-- 模块三：Kubernetes容器编排
+- [模块三：Kubernetes容器编排](./module3/README.md)
 - 模块四：基于Kubernetes的CICD

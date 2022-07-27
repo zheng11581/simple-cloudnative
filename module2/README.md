@@ -1,4 +1,4 @@
-## 模块二：Kubernetes基础架构和对象
+## 模块二：Kubernetes基础架构
 
 ### 什么是Kubernetes?
 
@@ -72,21 +72,3 @@ Kubernetes的高层API设计，一定是以Kubernetes的业务为基础出发，
 
 - 底层API不要有在高层API无法显式知道的内部隐藏机制
 例如StatefulSet和ReplicaSet，本来就是两种Pod集合，那么Kubernetes就用不同API对象来定义它们，而不会说只用同一个ReplicaSet，内部通过特殊的算法再来区分这个ReplicaSet是有状态的还是无状态
-
-### Kubernetes核心对象
-
-- [Pod](./apis/pod/pod.MD)
-
-- [ConfigMap & Secret](./apis/pod/cm-secret/cm-secret.MD)
-
-- ReplicaSet
-
-- Deployment
-
-- [Service](./apis/service/service.MD)
-
-- Job
-- CronJob
-
-- StatefulSet
-- DaemonSet
