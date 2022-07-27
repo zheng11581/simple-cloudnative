@@ -2,15 +2,15 @@
 
 ## Create ConfigMap and Secret
 ```shell
-# kubectl apply -f cm.yml
-# kubectl apply -f secret.yml
+# kubectl apply -f cm.yaml
+# kubectl apply -f secret.yaml
 ```
 
 ## Inject ConfigMap and Secret with ENV
 ```shell
 # kubectl explain pod.spec.containers.env.valueFrom
 
-# kubectl apply -f env-pod.yml
+# kubectl apply -f env-pod.yaml
 # kubectl get pod
 # kubectl exec -it env-pod -- sh
 
@@ -28,7 +28,7 @@
 # kubectl explain pod.spec.volumes
 # kubectl explain pod.spec.containers.volumeMounts
 
-# kubectl apply -f vol-pod.yml
+# kubectl apply -f vol-pod.yaml
 # kubectl get pod
 # kubectl exec -it vol-pod -- sh
 
