@@ -31,5 +31,13 @@ spec:
           configMapRef:
             name: wp-cm
 
+      resources:
+        limits:
+          memory: 100Mi
+          cpu: 100m
+        requests:
+          memory: 100Mi
+          cpu: 100m
+
 ---
 
