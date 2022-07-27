@@ -77,9 +77,7 @@ Kubernetes的高层API设计，一定是以Kubernetes的业务为基础出发，
 
 - [Pod](./apis/pod/pod.MD)
 
-- ConfigMap
-
-- Secret
+- [ConfigMap & Secret](./apis/pod/cm-secret/cm-secret.MD)
 
 - ReplicaSet
 

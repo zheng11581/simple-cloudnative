@@ -1,3 +1,4 @@
+## 为什么需要 ConfigMap Secret
 
 ## Create ConfigMap and Secret
 ```shell
@@ -5,7 +6,7 @@
 # kubectl apply -f secret.yml
 ```
 
-## Inject ConfigMap with ENV
+## Inject ConfigMap and Secret with ENV
 ```shell
 # kubectl explain pod.spec.containers.env.valueFrom
 
@@ -20,7 +21,7 @@
 # echo $PASSWORD
 ```
 
-## Inject ConfigMap with VOLUME
+## Inject ConfigMap and Secret with VOLUME
 ```shell
 # kubectl explain pod.spec.containers.env.valueFrom
 
