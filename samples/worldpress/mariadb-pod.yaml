@@ -1,43 +1,39 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: wp-cm
+  name: maria-cm
 
 data:
-  HOST: "172.17.0.5" # maria-pod 的ip地址
+  DATABASE: "db"
   USER: "wp"
   PASSWORD: "123"
-  NAME: "db"
+  ROOT_PASSWORD: "123"
 
 ---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: wp-pod
+  name: maria-pod
   labels:
     app: wordpress
-    role: website
+    role: database
 
 spec:
   containers:
-    - image: wordpress:5
-      name: wp-pod
+    - image: mariadb:10
+      name: maria
       imagePullPolicy: IfNotPresent
       ports:
-        - containerPort: 80
+        - containerPort: 3306
 
       envFrom:
-        - prefix: "WORDPRESS_DB_"
+        - prefix: "MARIADB_"
           configMapRef:
-            name: wp-cm
-
+            name: maria-cm
       resources:
         limits:
-          memory: 100Mi
-          cpu: 100m
+          memory: 500Mi
+          cpu: 500m
         requests:
           memory: 100Mi
           cpu: 100m
-
----
-
