@@ -47,7 +47,7 @@ metadata:
   name: maria-svc
 spec:
   ports:
-    - name: mysql
+    - name: mariadb
       port: 3306
       protocol: TCP
       targetPort: 3306
