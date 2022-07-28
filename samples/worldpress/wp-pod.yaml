@@ -4,7 +4,8 @@ metadata:
   name: wp-cm
 
 data:
-  HOST: "172.17.0.5" # maria-pod 的ip地址
+  # HOST: "172.17.0.5" # maria-pod 的ip地址
+  HOST: "worldpress.maria-svc"
   USER: "wp"
   PASSWORD: "123"
   NAME: "db"
