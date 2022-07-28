@@ -41,4 +41,19 @@ spec:
           cpu: 100m
 
 ---
-
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: wordpress
+  name: wp-svc
+spec:
+  ports:
+    - name: wordpress
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: wordpress
+    role: website
+  type: ClusterIP
