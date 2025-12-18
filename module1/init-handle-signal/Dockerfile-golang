@@ -1,0 +1,18 @@
+FROM swr.cn-north-4.myhuaweicloud.com/pixiu-public/golang:1.20-alpine as builder
+
+WORKDIR /app
+
+COPY go.mod main.go ./
+
+RUN go build -o init-handle-signal main.go
+
+FROM swr.cn-north-4.myhuaweicloud.com/pixiu-public/alpine:latest
+
+WORKDIR /app
+
+COPY --from=builder /app/init-handle-signal ./
+
+RUN chmod +x init-handle-signal
+
+# 使用 二进制文件 作为 init 程序启动
+ENTRYPOINT ["./init-handle-signal"]

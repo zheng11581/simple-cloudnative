@@ -1,0 +1,19 @@
+FROM swr.cn-north-4.myhuaweicloud.com/pixiu-public/golang:1.20-alpine as builder
+
+WORKDIR /app
+
+COPY go.mod main.go run.sh ./
+
+RUN go build -o init-handle-signal main.go
+
+FROM swr.cn-north-4.myhuaweicloud.com/pixiu-public/alpine:latest
+
+WORKDIR /app
+
+COPY --from=builder /app/init-handle-signal ./
+COPY --from=builder /app/run.sh ./
+
+RUN chmod +x init-handle-signal run.sh
+
+# 使用 shell 作为 init 程序启动
+ENTRYPOINT ["/bin/sh", "./run.sh"]
