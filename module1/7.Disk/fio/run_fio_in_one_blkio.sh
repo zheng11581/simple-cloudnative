@@ -14,8 +14,8 @@ CGROUP_CONTAINER_PATH=$(find /sys/fs/cgroup/blkio/ -name "*$CONTAINER_ID*")
 echo $CGROUP_CONTAINER_PATH
 
 # To get the device major and minor id from /dev for the device that /tmp/test1 is on.
-echo "253:0 10485760" > $CGROUP_CONTAINER_PATH/blkio.throttle.read_bps_device
-echo "253:0 10485760" > $CGROUP_CONTAINER_PATH/blkio.throttle.write_bps_device
+echo "8:0 1048576" > $CGROUP_CONTAINER_PATH/blkio.throttle.read_bps_device
+echo "8:0 1048576" > $CGROUP_CONTAINER_PATH/blkio.throttle.write_bps_device
 
-docker exec fio_test1 fio -direct=1 -rw=write -ioengine=libaio -bs=4k -size=100MB -numjobs=1  -name=/tmp/fio_test1.log
-docker exec fio_test1 fio -direct=1 -rw=read -ioengine=libaio -bs=4k -size=100MB -numjobs=1  -name=/tmp/fio_test1.log
+docker exec fio_test1 fio -direct=1 -rw=write -ioengine=libaio -bs=4k -size=10MB -numjobs=1  -name=/tmp/fio_test1.log
+docker exec fio_test1 fio -direct=1 -rw=read -ioengine=libaio -bs=4k -size=10MB -numjobs=1  -name=/tmp/fio_test1.log
